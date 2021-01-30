@@ -2,18 +2,27 @@
 	"name": "nigerian-senators",
 	"version": "1.0.0",
 	"description": "",
-	"main": "index.js",
+	"main": "app.js",
 	"scripts": {
-		"start": "cd server && npm install && npm start"
+		"start": "cd ../client && npm run build && cd ../server && node app.js",
+		"dev": "nodemon app"
 	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/techreagan/senators-nigeria-vue-api.git"
-	},
+	"keywords": [],
 	"author": "",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/techreagan/senators-nigeria-vue-api/issues"
-	},
-	"homepage": "https://github.com/techreagan/senators-nigeria-vue-api#readme"
+	"license": "MIT",
+	"dependencies": {
+		"colors": "^1.4.0",
+		"cors": "^2.8.5",
+		"dotenv": "^8.2.0",
+		"express": "^4.17.1",
+		"helmet": "^3.21.2",
+		"hpp": "^0.2.3",
+		"install": "^0.13.0",
+		"joi": "^17.3.0",
+		"morgan": "^1.9.1",
+		"mysql2": "^2.2.5",
+		"nodemailer": "^6.4.2",
+		"postmark": "^2.7.1",
+		"xss-clean": "^0.1.1"
+	}
 }
