@@ -11,7 +11,7 @@ const routes = [
 	//   component: Home
 	// },
 	{
-		path: '/senators',
+		path: '/',
 		name: 'Senators',
 
 		component: () =>
