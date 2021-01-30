@@ -28,7 +28,7 @@
 					></v-text-field>
 				</v-col>
 				<v-col cols="9">
-					<v-skeleton-loader type="table-tbody" :loading="loading">
+					<v-skeleton-loader type="table-tbody" :loading="loading.data">
 						<v-simple-table>
 							<template v-slot:default>
 								<thead>
@@ -63,7 +63,7 @@
 												class="mr-3"
 												color="orange"
 											>
-												<v-icon @click="editItem(item)">
+												<v-icon @click="openEmailDialog(senator.id)">
 													mdi-mail
 												</v-icon>
 											</v-btn>
@@ -138,18 +138,61 @@
 				</v-card-actions>
 			</v-card>
 		</v-dialog>
+		<v-dialog v-model="emailDialog" max-width="500">
+			<v-card>
+				<v-card-title class="headline">
+					Send Email to Senator
+				</v-card-title>
+
+				<v-card-text class="py-10 px-8">
+					<ValidationObserver ref="form" v-slot="{ handleSubmit, reset }">
+						<form
+							@submit.prevent="handleSubmit(sendEmail)"
+							@reset.prevent="reset"
+						>
+							<ValidationProvider
+								v-slot="{ errors }"
+								name="Subject"
+								rules="required|min:3"
+							>
+								<v-text-field
+									v-model="data.subject"
+									:error-messages="errors"
+									label="Subject"
+									outlined
+								></v-text-field>
+							</ValidationProvider>
+
+							<ValidationProvider
+								v-slot="{ errors }"
+								name="Message"
+								rules="required|min:3"
+							>
+								<v-textarea
+									outlined
+									v-model="data.message"
+									:error-messages="errors"
+									label="Message"
+								></v-textarea>
+							</ValidationProvider>
+
+							<v-btn
+								type="submit"
+								class="green white--text"
+								:loading="loading.btn"
+								depressed
+								>Send Email</v-btn
+							>
+						</form>
+					</ValidationObserver>
+				</v-card-text>
+			</v-card>
+		</v-dialog>
 
 		<v-snackbar color="green" v-model="snackbar">
-			Senator deleted successfully
+			{{ message }}
 			<template v-slot:action="{ attrs }">
-				<v-btn
-					color="white"
-					text
-					v-bind="attrs"
-					@click="snackbar = false"
-					:loading="deleteBtnLoading"
-					icon
-				>
+				<v-btn color="white" text v-bind="attrs" @click="snackbar = false" icon>
 					<v-icon>mdi-close-circle</v-icon>
 				</v-btn>
 			</template>
@@ -159,23 +202,35 @@
 
 <script>
 import SenatorService from '@/services/SenatorService'
+import { mapGetters } from 'vuex'
+
 export default {
 	data: () => {
 		return {
 			errored: false,
-			loading: false,
-			deleteBtnLoading: false,
+			loading: {
+				data: false,
+				btn: false,
+			},
+
 			senators: [],
 			page: 1,
 			deleteId: null,
 			deleteDialog: false,
 			snackbar: false,
 			search: '',
+			emailDialog: false,
+			emailId: null,
+			data: {
+				subject: '',
+				message: '',
+			},
 		}
 	},
+	computed: { ...mapGetters(['message']) },
 	methods: {
 		async getSenators() {
-			this.loading = true
+			this.loading.data = true
 
 			const senators = await SenatorService.findAll({
 				page: this.page,
@@ -186,7 +241,7 @@ export default {
 					this.errored = true
 				})
 				.finally(() => {
-					this.loading = false
+					this.loading.data = false
 				})
 
 			if (typeof senators === 'undefined') return
@@ -194,7 +249,7 @@ export default {
 			this.senators = senators.data
 		},
 		async deleteSenator() {
-			this.deleteBtnLoading = true
+			this.loading.btn = true
 			console.log(this.deleteId)
 			await SenatorService.deleteById(this.deleteId)
 				.catch((err) => {
@@ -205,20 +260,50 @@ export default {
 					this.senators.data = this.senators.data.filter(
 						(senator) => this.deleteId !== senator.id
 					)
-					this.deleteBtnLoading = false
+					this.loading.btn = false
 					this.deleteDialog = false
 
+					this.$store.dispatch('message', 'Senator successfully deleted')
 					this.snackbar = true
 				})
+		},
+		async sendEmail() {
+			this.loading.btn = true
+
+			const senator = await SenatorService.sendMail({
+				id: this.emailId,
+				...this.data,
+			})
+				.catch((err) => {
+					this.$refs.form.setErrors(err.response.data.error)
+				})
+				.finally(() => {
+					this.loading.btn = false
+				})
+
+			if (!senator) return
+			// this.$router.push({ name: 'Senators' })
+			this.$store.dispatch('message', 'Email sent succesfully')
+			this.emailDialog = false
+			this.snackbar = true
 		},
 		deleteBtn(id) {
 			console.log(id)
 			this.deleteId = id
 			this.deleteDialog = true
 		},
+		openEmailDialog(id) {
+			this.emailId = id
+			this.emailDialog = true
+		},
+	},
+	beforeRouteLeave(to, from, next) {
+		this.$store.dispatch('message', '')
+		next()
 	},
 	mounted() {
 		this.getSenators()
+		this.snackbar = this.message !== '' ? true : false
 	},
 }
 </script>

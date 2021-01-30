@@ -19,6 +19,9 @@ export default {
 	create(data) {
 		return Api().post('senators', data)
 	},
+	sendMail({ id, subject, message }) {
+		return Api().post(`senators/${id}/send-email`, { subject, message })
+	},
 	updateById({ id, name, phoneNumber, email, state }) {
 		return Api().put(`senators/${id}`, { name, phoneNumber, email, state })
 	},

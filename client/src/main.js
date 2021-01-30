@@ -3,12 +3,15 @@ import App from './App.vue'
 import vuetify from './plugins/vuetify'
 import router from './router'
 import { required, email, max, min, size, oneOf } from 'vee-validate/dist/rules'
+
 import {
 	extend,
 	ValidationObserver,
 	ValidationProvider,
 	setInteractionMode,
 } from 'vee-validate'
+
+import store from './store'
 
 setInteractionMode('eager')
 
@@ -53,7 +56,8 @@ Vue.component('ValidationObserver', ValidationObserver)
 Vue.config.productionTip = false
 
 new Vue({
-	vuetify,
-	router,
-	render: (h) => h(App),
+    vuetify,
+    router,
+    store,
+    render: (h) => h(App)
 }).$mount('#app')

@@ -145,6 +145,7 @@ export default {
 
 			if (!senator) return
 			this.$router.push({ name: 'Senators' })
+			this.$store.dispatch('message', 'Senator successfully added')
 		},
 	},
 	mounted() {
