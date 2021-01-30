@@ -1,0 +1,19 @@
+{
+	"name": "nigerian-senators",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start": "cd server && npm start"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/techreagan/senators-nigeria-vue-api.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/techreagan/senators-nigeria-vue-api/issues"
+	},
+	"homepage": "https://github.com/techreagan/senators-nigeria-vue-api#readme"
+}
