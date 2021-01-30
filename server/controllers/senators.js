@@ -54,13 +54,17 @@ exports.createSenator = asyncHandler(async (req, res, next) => {
 	let [findEmail] = await Senator.findByEmail(email)
 
 	if (findEmail.length) {
-		return next(new ErrorResponse(`Email already taken`))
+		return next(new ErrorResponse(null, 400, { Email: 'Email already taken' }))
 	}
 
 	let [findPhoneNumber] = await Senator.findByPhoneNumber(phoneNumber)
 
 	if (findPhoneNumber.length)
-		return next(new ErrorResponse(`Phone numer already taken`))
+		return next(
+			new ErrorResponse(null, 400, {
+				'Phone Number': 'Phone numer already taken',
+			})
+		)
 
 	let senator = new Senator(null, name, phoneNumber, email, state)
 	senator.save()
@@ -97,13 +101,17 @@ exports.updateSenator = asyncHandler(async (req, res, next) => {
 	let [findEmail] = await Senator.findByEmail(email)
 
 	if (findEmail.length && email !== senator[0].email) {
-		return next(new ErrorResponse(`Email already taken`))
+		return next(new ErrorResponse(null, 400, { Email: 'Email already taken' }))
 	}
 
 	let [findPhoneNumber] = await Senator.findByPhoneNumber(phoneNumber)
 
 	if (findPhoneNumber.length && phoneNumber !== senator[0].phoneNumber) {
-		return next(new ErrorResponse(`Phone numer already taken`))
+		return next(
+			new ErrorResponse(null, 400, {
+				'Phone Number': 'Phone numer already taken',
+			})
+		)
 	}
 
 	senator = new Senator(req.params.id, name, phoneNumber, email, state)

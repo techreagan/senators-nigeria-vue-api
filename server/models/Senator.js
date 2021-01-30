@@ -33,7 +33,7 @@ module.exports = class Senator {
 				: ''
 
 		return db.execute(
-			`SELECT * FROM senators INNER JOIN states ON senators.state = states.id ${searchQuery} ORDER BY states.id ASC LIMIT ${query.page}, ${query.limit}`
+			`SELECT senators.id, senators.name, senators.email, senators.phoneNumber, states.state FROM senators INNER JOIN states ON senators.state = states.id ${searchQuery} ORDER BY states.id ASC LIMIT ${query.page}, ${query.limit}`
 		)
 	}
 
