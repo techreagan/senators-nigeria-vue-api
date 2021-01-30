@@ -2,6 +2,9 @@ const asyncHandler = require('../middleware/async')
 const ErrorResponse = require('../utils/errorResponse')
 const Senator = require('../models/Senator')
 const { senatorValidation } = require('../utils/validations')
+// const sendEmail = require('../utils/sendEmail')
+const postmark = require('postmark')
+const client = new postmark.ServerClient('a25eb8b2-e370-4b61-8138-da4581ec16d5')
 
 // @desc    Get all users
 // @route   GET /api/v1/auth/users
@@ -120,6 +123,40 @@ exports.updateSenator = asyncHandler(async (req, res, next) => {
 	res.status(200).json({ success: true, data: senator })
 })
 
+// @desc    Send email to senator
+// @route   POST /api/v1/senators/:id/send-email
+// @access  Public
+exports.sendSenatorEmail = asyncHandler(async (req, res, next) => {
+	const [senator] = await Senator.findById(req.params.id)
+
+	if (!senator.length)
+		return next(
+			new ErrorResponse(`No senator with that id of ${req.params.id}`)
+		)
+
+	try {
+		// client.sendEmail({
+		// 	From: 'techreagan@egbape.com',
+		// 	To: senator[0].email,
+		// 	Subject: req.body.subject,
+		// 	TextBody: req.body.message,
+		// 	MessageStream: 'outbound',
+		// })
+		res.status(200).json({ success: true, data: 'Email sent' })
+	} catch (err) {
+		return next(new ErrorResponse('Email could not be sent', 500))
+	}
+	// try {
+	// 	await sendEmail({
+	// 		email: senator[0].email,
+	// 		subject: req.body.subject,
+	// 		message: req.body.message,
+	// 	})
+	// 	res.status(200).json({ success: true, data: 'Email sent' })
+	// } catch (err) {
+	// 	return next(new ErrorResponse('Email could not be sent', 500))
+	// }
+})
 // @desc    Delete senator
 // @route   DELETE /api/v1/senators/:id
 // @access  Public

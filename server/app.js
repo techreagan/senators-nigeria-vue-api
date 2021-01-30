@@ -1,3 +1,5 @@
+const path = require('path')
+
 const express = require('express')
 const dotenv = require('dotenv')
 const colors = require('colors')
@@ -35,6 +37,12 @@ app.use(cors())
 
 // Prevent http param pollution
 app.use(hpp())
+
+app.use(express.static(path.join(__dirname, 'public')))
+
+app.get(/^((?!\/api\/).)*$/, (req, res) => {
+	res.sendFile(__dirname + '/public/index.html')
+})
 
 app.use('/api/v1/senators', senatorRoutes)
 app.use('/api/v1/states', stateRoutes)
