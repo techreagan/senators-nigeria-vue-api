@@ -41,19 +41,7 @@ Install nodemon globally
 npm install -g nodemon
 ```
 
-Run database seeder
-
-```console
-node seeder -i
-```
-
-Delete all data
-
-```console
-node seeder -d
-```
-
-## Run Boilerplate
+## Run App
 
 ```console
 node run dev
