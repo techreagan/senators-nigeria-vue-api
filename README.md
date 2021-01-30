@@ -1,25 +1,23 @@
-# NodeJS / ExpressJS MongoDB(Mongoose) Boilerplate
+# Senators in Nigeria
 
-This is my boilerplate for RESTful API with NodeJS and MongoDB.
+List of senators in nigeria
 
-## Boilerplate Features
-* Authentication with JWT (Reset Password with email)
-* User Create, Read, Update and Delete (CRUD) operations
-* API Security (NoSQL Injections, XSS Attacks, http param pollution etc)
+## API Documentation
+
+API documentation with examples response: [API](https://documenter.getpostman.com/view/9407876/TW6xooMw)
 
 ## Configuration File
 
 Modify the config/.env file to your environment variables, set your JWT_SECRET and SMTP variables
 
-``` ENV
+```ENV
 NODE_ENV=development
 PORT=3001
 
-MONGO_URI=YOUR_URL
-
-JWT_SECRET=YOUR_SECRET
-JWT_EXPIRE=30d
-JWT_COOKIE_EXPIRE=30
+MYSQL_HOST=
+MYSQL_USER=
+MYSQL_PASSWORD=
+MYSQL_DATABASE=
 
 SMTP_HOST=smtp.mailtrap.io
 SMTP_PORT=2525
@@ -30,28 +28,34 @@ FROM_NAME=Boilerplate
 ```
 
 ## Installation
+
 Install all npm dependecies
-``` console
+
+```console
 npm install
 ```
 
 Install nodemon globally
-``` console
+
+```console
 npm install -g nodemon
 ```
 
 Run database seeder
-``` console
+
+```console
 node seeder -i
 ```
 
 Delete all data
-``` console
+
+```console
 node seeder -d
 ```
 
 ## Run Boilerplate
-``` console
+
+```console
 node run dev
 ```
 
